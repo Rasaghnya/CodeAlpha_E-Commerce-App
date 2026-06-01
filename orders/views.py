@@ -1,7 +1,9 @@
 from django.shortcuts import render
 
 # Create your views here.
-
+from .forms import CheckoutForm
+from .models import Order
+from .models import OrderItem
 
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
@@ -109,4 +111,140 @@ def cart_view(request):
         request,
         "orders/cart.html",
         context
+    )
+
+@login_required
+def checkout_view(request):
+
+    cart, created = Cart.objects.get_or_create(
+        user=request.user
+    )
+
+    items = cart.items.all()
+
+    if not items.exists():
+        return redirect("cart")
+
+    total = sum(
+        item.total_price
+        for item in items
+    )
+
+    if request.method == "POST":
+
+        form = CheckoutForm(
+            request.POST
+        )
+
+        if form.is_valid():
+
+            order = Order.objects.create(
+                user=request.user,
+
+                total_amount=total,
+
+                full_name=form.cleaned_data['full_name'],
+
+                phone_number=form.cleaned_data['phone_number'],
+
+                shipping_address=form.cleaned_data['shipping_address'],
+
+                city=form.cleaned_data['city'],
+
+                state=form.cleaned_data['state'],
+
+                zipcode=form.cleaned_data['zipcode'],
+
+                payment_method=form.cleaned_data['payment_method']
+            )
+
+            for item in items:
+
+                OrderItem.objects.create(
+                    order=order,
+
+                    product=item.product,
+
+                    quantity=item.quantity,
+
+                    price=item.product.price
+                )
+
+            items.delete()
+
+            return redirect(
+                "order_success",
+                order_id=order.id
+            )
+
+    else:
+
+        form = CheckoutForm()
+
+    context = {
+        "form": form,
+        "total": total
+    }
+
+    return render(
+        request,
+        "orders/checkout.html",
+        context
+    )
+
+@login_required
+def order_success_view(
+    request,
+    order_id
+):
+
+    order = get_object_or_404(
+        Order,
+        id=order_id,
+        user=request.user
+    )
+
+    return render(
+        request,
+        "orders/order_success.html",
+        {
+            "order": order
+        }
+    )
+
+@login_required
+def order_history_view(request):
+
+    orders = Order.objects.filter(
+        user=request.user
+    ).order_by(
+        '-created_at'
+    )
+
+    return render(
+        request,
+        "orders/order_history.html",
+        {
+            "orders": orders
+        }
+    )
+
+@login_required
+def order_detail_view(
+    request,
+    order_id
+):
+
+    order = get_object_or_404(
+        Order,
+        id=order_id,
+        user=request.user
+    )
+
+    return render(
+        request,
+        "orders/order_detail.html",
+        {
+            "order": order
+        }
     )
