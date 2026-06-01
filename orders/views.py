@@ -1,18 +1,12 @@
 from django.shortcuts import render
-
-# Create your views here.
 from .forms import CheckoutForm
 from .models import Order
 from .models import OrderItem
-
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
-
 from django.contrib.auth.decorators import login_required
-
 from .models import Cart
 from .models import CartItem
-
 from store.models import Product
 
 @login_required
@@ -20,7 +14,6 @@ def add_to_cart(request, product_id):
     """
     Add product to user's cart.
     """
-
     product = get_object_or_404(
         Product,
         id=product_id
@@ -38,6 +31,13 @@ def add_to_cart(request, product_id):
     if not created:
         cart_item.quantity += 1
         cart_item.save()
+    if product.stock <= 0:
+
+        messages.error(
+            request,
+            "Product is out of stock."
+        )
+        return redirect("product_detail")
 
     return redirect("cart")
 
@@ -119,17 +119,13 @@ def checkout_view(request):
     cart, created = Cart.objects.get_or_create(
         user=request.user
     )
-
     items = cart.items.all()
-
     if not items.exists():
         return redirect("cart")
-
     total = sum(
         item.total_price
         for item in items
     )
-
     if request.method == "POST":
 
         form = CheckoutForm(
@@ -140,57 +136,42 @@ def checkout_view(request):
 
             order = Order.objects.create(
                 user=request.user,
-
                 total_amount=total,
-
                 full_name=form.cleaned_data['full_name'],
-
                 phone_number=form.cleaned_data['phone_number'],
-
                 shipping_address=form.cleaned_data['shipping_address'],
-
                 city=form.cleaned_data['city'],
-
                 state=form.cleaned_data['state'],
-
                 zipcode=form.cleaned_data['zipcode'],
-
                 payment_method=form.cleaned_data['payment_method']
             )
 
             for item in items:
-
                 OrderItem.objects.create(
                     order=order,
-
                     product=item.product,
-
                     quantity=item.quantity,
-
                     price=item.product.price
                 )
+                product = item.product
+                product.stock -= item.quantity
 
-            items.delete()
-
-            return redirect(
-                "order_success",
-                order_id=order.id
-            )
-
+    if product.stock <= 0:
+        product.available = False
+        product.save()
     else:
-
         form = CheckoutForm()
 
-    context = {
-        "form": form,
-        "total": total
-    }
+        context = {
+            "form": form,
+            "total": total
+        }
 
-    return render(
-        request,
-        "orders/checkout.html",
-        context
-    )
+        return render(
+            request,
+            "orders/checkout.html",
+            context
+        )
 
 @login_required
 def order_success_view(

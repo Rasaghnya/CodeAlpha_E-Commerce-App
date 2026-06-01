@@ -1,6 +1,15 @@
 {% extends 'base.html' %}
 
 {% block title %}{{ product.name }} | E-Commerce Store{% endblock %}
+{% if product.stock > 0 %}
+
+<p>Available</p>
+
+{% else %}
+
+<p>Out of Stock</p>
+
+{% endif %}
 
 {% block content %}
 <article class="product-detail">
@@ -12,3 +21,4 @@
     <a href="{% url 'home' %}">Back to home</a>
 </article>
 {% endblock %}
+
