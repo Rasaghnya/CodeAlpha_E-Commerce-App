@@ -32,13 +32,20 @@ class CartItem(models.Model):
 
 class Order(models.Model):
 
-    STATUS_CHOICES = (
-        ('Pending', 'Pending'),
-        ('Processing', 'Processing'),
-        ('Shipped', 'Shipped'),
-        ('Delivered', 'Delivered'),
-        ('Cancelled', 'Cancelled'),
-    )
+    STATUS_CHOICES = [
+
+    ('Pending', 'Pending'),
+
+    ('Confirmed', 'Confirmed'),
+
+    ('Packed', 'Packed'),
+
+    ('Shipped', 'Shipped'),
+
+    ('Delivered', 'Delivered'),
+
+    ('Cancelled', 'Cancelled'),
+]
 
     user = models.ForeignKey(
         User,
@@ -92,6 +99,9 @@ class Order(models.Model):
 
     created_at = models.DateTimeField(
         auto_now_add=True
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True
     )
 
     def __str__(self):
