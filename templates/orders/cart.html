@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>My Cart</h2>
+
+{% for item in items %}
+
+<div>
+
+    <h4>{{ item.product.name }}</h4>
+
+    <p>
+        ₹{{ item.product.price }}
+    </p>
+
+    <form method="POST"
+          action="{% url 'update_cart' item.id %}">
+
+        {% csrf_token %}
+
+        <input
+            type="number"
+            name="quantity"
+            value="{{ item.quantity }}"
+            min="1">
+
+        <button type="submit">
+            Update
+        </button>
+
+    </form>
+
+    <p>
+        Subtotal:
+        ₹{{ item.total_price }}
+    </p>
+
+    <a href="{% url 'remove_from_cart' item.id %}">
+        Remove
+    </a>
+
+</div>
+
+<hr>
+
+{% empty %}
+
+<p>Cart is empty.</p>
+
+{% endfor %}
+
+<h3>Total: ₹{{ total }}</h3>
+
+{% endblock %}

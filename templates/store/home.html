@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Home | E-Commerce Store{% endblock %}
+
+{% block content %}
+<h1>Welcome to the E-Commerce Store</h1>
+<p>Discover the latest products and shop with confidence.</p>
+
+{% if products %}
+    <section class="product-grid">
+        {% for product in products %}
+            <article class="product-card">
+                <h2>{{ product.name }}</h2>
+                <p class="category">Category: {{ product.category.name }}</p>
+                <p class="price">Price: ₹{{ product.price }}</p>
+                <a href="{% url 'product_detail' product.slug %}">View details</a>
+            </article>
+        {% endfor %}
+    </section>
+
+    <p><a href="{% url 'product_list' %}">View all products</a></p>
+{% else %}
+    <p>No products are available right now. Please check back soon.</p>
+{% endif %}
+{% endblock %}
