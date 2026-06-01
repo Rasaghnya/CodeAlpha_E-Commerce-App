@@ -7,9 +7,12 @@ from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 
 from django.contrib.auth.decorators import login_required
+from types import SimpleNamespace
+import time
 
 from .models import Cart
 from .models import CartItem
+from .forms import CheckoutForm
 
 from store.models import Product
 
@@ -109,4 +112,49 @@ def cart_view(request):
         request,
         "orders/cart.html",
         context
+    )
+
+
+@login_required
+def checkout_view(request):
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    items = cart.items.select_related("product")
+
+    if not items.exists():
+        return redirect("cart")
+
+    total = sum(item.total_price for item in items)
+    form = CheckoutForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        order_id = int(time.time())
+        request.session["order_total"] = float(total)
+
+        for item in items:
+            product = item.product
+            if product.stock >= item.quantity:
+                product.stock = max(product.stock - item.quantity, 0)
+                product.save()
+
+        items.delete()
+        return redirect("order_success", order_id=order_id)
+
+    return render(
+        request,
+        "orders/checkout.html",
+        {"form": form, "total": total}
+    )
+
+
+@login_required
+def order_success_view(request, order_id):
+    total_amount = request.session.pop("order_total", None)
+    if total_amount is None:
+        return redirect("home")
+
+    order = SimpleNamespace(id=order_id, total_amount=total_amount)
+    return render(
+        request,
+        "orders/order_success.html",
+        {"order": order}
     )

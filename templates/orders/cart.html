@@ -1,55 +1,62 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
+
+{% block title %}My Cart | E-Commerce Store{% endblock %}
 
 {% block content %}
-
-<h2>My Cart</h2>
-
-{% for item in items %}
-
-<div>
-
-    <h4>{{ item.product.name }}</h4>
-
-    <p>
-        ₹{{ item.product.price }}
-    </p>
-
-    <form method="POST"
-          action="{% url 'update_cart' item.id %}">
-
-        {% csrf_token %}
-
-        <input
-            type="number"
-            name="quantity"
-            value="{{ item.quantity }}"
-            min="1">
-
-        <button type="submit">
-            Update
-        </button>
-
-    </form>
-
-    <p>
-        Subtotal:
-        ₹{{ item.total_price }}
-    </p>
-
-    <a href="{% url 'remove_from_cart' item.id %}">
-        Remove
-    </a>
-
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <h2 class="fw-bold mb-3">My Cart</h2>
+        {% if items %}
+            <div class="table-responsive rounded-4 overflow-hidden">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">Product</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Subtotal</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="cart-thumbnail rounded">
+                                        <div>
+                                            <h5 class="mb-1">{{ item.product.name }}</h5>
+                                            <p class="text-muted mb-0">{{ item.product.category.name }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>₹{{ item.product.price }}</td>
+                                <td>
+                                    <form method="POST" action="{% url 'update_cart' item.id %}" class="d-flex align-items-center gap-2">
+                                        {% csrf_token %}
+                                        <input type="number" name="quantity" class="form-control form-control-sm quantity-input" value="{{ item.quantity }}" min="1">
+                                        <button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
+                                    </form>
+                                </td>
+                                <td class="fw-semibold">₹{{ item.total_price }}</td>
+                                <td>
+                                    <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-sm btn-outline-danger">Remove</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mt-4 pt-3 border-top">
+                <div>
+                    <p class="text-muted mb-1">Estimated total</p>
+                    <h3 class="mb-0">₹{{ total }}</h3>
+                </div>
+                <a href="{% url 'checkout' %}" class="btn btn-primary btn-lg">Proceed to Checkout</a>
+            </div>
+        {% else %}
+            <div class="alert alert-info mb-0">Your cart is empty. Start shopping to add items.</div>
+        {% endif %}
+    </div>
 </div>
-
-<hr>
-
-{% empty %}
-
-<p>Cart is empty.</p>
-
-{% endfor %}
-
-<h3>Total: ₹{{ total }}</h3>
-
 {% endblock %}

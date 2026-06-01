@@ -1,31 +1,57 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}E-Commerce Store{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
-<body>
-    <header>
-        <nav>
-            <a href="/">Home</a>
-            {% if user.is_authenticated %}
-                <a href="{% url 'logout' %}">Logout</a>
-            {% else %}
-                <a href="{% url 'login' %}">Login</a>
-                <a href="{% url 'register' %}">Register</a>
-            {% endif %}
-        </nav>
+<body class="bg-light text-dark">
+    <header class="bg-white border-bottom shadow-sm">
+        <div class="container py-3">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <a class="navbar-brand fw-bold text-primary" href="{% url 'home' %}">E-Commerce Store</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav ms-auto align-items-lg-center">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'product_list' %}">Products</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'cart' %}">Cart</a></li>
+                        {% if user.is_authenticated %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+                            <li class="nav-item"><span class="nav-link disabled">Hi, {{ user.username }}</span></li>
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+        </div>
     </header>
 
-    <main>
-        {% block content %}{% endblock %}
+    <main class="py-5">
+        <div class="container">{% block content %}{% endblock %}</div>
     </main>
 
-    <footer>
-        <p>&copy; 2026 E-Commerce Store</p>
+    <footer class="bg-white border-top py-4">
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+            <p class="mb-0 text-muted">&copy; 2026 E-Commerce Store</p>
+            <div>
+                <a href="{% url 'home' %}" class="text-muted me-3">Home</a>
+                <a href="{% url 'product_list' %}" class="text-muted me-3">Products</a>
+                <a href="{% url 'cart' %}" class="text-muted">Cart</a>
+            </div>
+        </div>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'scripts.js' %}"></script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>
