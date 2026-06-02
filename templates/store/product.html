@@ -1,12 +1,17 @@
-﻿{% extends 'base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}Products | E-Commerce Store{% endblock %}
 
 {% block content %}
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
     <div>
-        <h2 class="fw-bold">All Products</h2>
-        <p class="text-muted mb-0">Explore every item in the store with pricing, stock, and category information.</p>
+        {% if category %}
+            <h2 class="fw-bold">{{ category.name }} Products</h2>
+            <p class="text-muted mb-0">Explore available products in the {{ category.name }} category.</p>
+        {% else %}
+            <h2 class="fw-bold">All Products</h2>
+            <p class="text-muted mb-0">Explore every item in the store with pricing, stock, and category information.</p>
+        {% endif %}
     </div>
     <div class="w-100 w-md-50">
         <input type="search" class="form-control form-control-lg" placeholder="Search products..." aria-label="Search products">

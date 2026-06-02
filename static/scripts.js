@@ -1,4 +1,4 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".btn-add-to-cart").forEach(function (button) {
         button.addEventListener("click", function () {
             button.classList.add("btn-loading");

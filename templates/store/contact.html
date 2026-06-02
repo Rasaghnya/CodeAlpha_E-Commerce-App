@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us | E-Commerce Store{% endblock %}
+
+{% block content %}
+
+<section class="contact-hero py-5 text-white">
+    <div class="container">
+        <div class="text-center">
+            <p class="text-uppercase text-white-50 mb-2 small">Contact us</p>
+            <h1 class="display-5 fw-bold mb-3">We’re ready to provide the right solution for your needs</h1>
+            <p class="lead mx-auto" style="max-width: 760px;">Whether you have a question about an order, need help choosing a product, or just want to say hello, our team is here to help.</p>
+        </div>
+    </div>
+</section>
+
+<section class="contact-main py-5">
+    <div class="container">
+        <div class="contact-card shadow-lg overflow-hidden rounded-4">
+            <div class="row g-0">
+                <div class="col-lg-5 contact-info p-5 text-white">
+                    <div class="mb-4">
+                        <span class="badge bg-white text-primary py-2 px-3">Get in touch</span>
+                        <h2 class="mt-4">Head Office</h2>
+                        <p class="text-white-75">We are happy to answer your questions and provide support across our store services.</p>
+                    </div>
+                    <div class="contact-details">
+                        <div class="contact-detail mb-4">
+                            <div class="detail-icon">📍</div>
+                            <div>
+                                <h6 class="mb-1">Office address</h6>
+                                <p class="mb-0 text-white-75">123 Commerce Street, Downtown City, Country</p>
+                            </div>
+                        </div>
+                        <div class="contact-detail mb-4">
+                            <div class="detail-icon">✉️</div>
+                            <div>
+                                <h6 class="mb-1">Email us</h6>
+                                <p class="mb-0 text-white-75">support@ecommercestore.local</p>
+                            </div>
+                        </div>
+                        <div class="contact-detail mb-4">
+                            <div class="detail-icon">📞</div>
+                            <div>
+                                <h6 class="mb-1">Call us</h6>
+                                <p class="mb-0 text-white-75">+1 (555) 123-4567</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="social-icons mt-4">
+                        <a href="#" class="social-link">Facebook</a>
+                        <a href="#" class="social-link">Twitter</a>
+                        <a href="#" class="social-link">Instagram</a>
+                    </div>
+                </div>
+                <div class="col-lg-7 contact-form-section p-5 bg-white">
+                    <h2 class="mb-4">Send us a message</h2>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-success" role="alert">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                    <form method="post" class="row g-3">
+                        {% csrf_token %}
+                        <div class="col-md-6">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Your name">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="company" class="form-label">Company</label>
+                            <input type="text" class="form-control" id="company" name="company" placeholder="Company">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                        </div>
+                        <div class="col-12">
+                            <label for="subject" class="form-label">Subject</label>
+                            <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject">
+                        </div>
+                        <div class="col-12">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" placeholder="Your message"></textarea>
+                        </div>
+                        <div class="col-12 text-end mt-2">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">Send</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="contact-map">
+    <div class="container-fluid px-0">
+        <div class="map-frame">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d19855.380080048294!2d-0.14542268092430188!3d51.50721793133304!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761b3332d52015%3A0xc80b8f06e177fe62!2sLondon%2C%20UK!5e0!3m2!1sen!2sus!4v1700000000000" width="100%" height="420" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

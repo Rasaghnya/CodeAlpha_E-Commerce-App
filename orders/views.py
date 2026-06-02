@@ -12,6 +12,7 @@ import time
 
 from .models import Cart
 from .models import CartItem
+from .models import Order
 from .forms import CheckoutForm
 
 from store.models import Product
@@ -112,6 +113,27 @@ def cart_view(request):
         request,
         "orders/cart.html",
         context
+    )
+
+
+@login_required
+def my_orders_view(request):
+    """
+    Show authenticated user's orders.
+    """
+
+    orders = Order.objects.filter(
+        user=request.user
+    ).order_by(
+        "-created_at"
+    )
+
+    return render(
+        request,
+        "orders/my_orders.html",
+        {
+            "orders": orders
+        }
     )
 
 
