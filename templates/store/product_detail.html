@@ -12,13 +12,27 @@
 {% endif %}
 
 {% block content %}
-<article class="product-detail">
-    <h1>{{ product.name }}</h1>
-    <p class="category">Category: {{ product.category.name }}</p>
-    <p class="price">Price: ₹{{ product.price }}</p>
-    <p class="description">{{ product.description }}</p>
-    <p class="stock">Stock: {{ product.stock }}</p>
-    <a href="{% url 'home' %}">Back to home</a>
-</article>
+<div class="row g-4">
+    <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm overflow-hidden product-detail-card">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded-start">
+        </div>
+    </div>
+    <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm p-4 h-100">
+            <div class="mb-3">
+                <span class="badge bg-secondary">{{ product.category.name }}</span>
+            </div>
+            <h1 class="display-6 fw-bold mb-3">{{ product.name }}</h1>
+            <p class="fs-4 text-primary fw-semibold mb-3">₹{{ product.price }}</p>
+            <p class="text-muted mb-4">{{ product.description }}</p>
+            <p class="mb-4"><strong>Stock:</strong> {{ product.stock }}</p>
+            <div class="d-flex flex-column flex-sm-row gap-3">
+                <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary btn-lg btn-add-to-cart">Add to Cart</a>
+                <a href="{% url 'product_list' %}" class="btn btn-outline-secondary btn-lg">Browse More</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 

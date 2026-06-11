@@ -6,29 +6,29 @@
 
 {% for order in orders %}
 
-<div>
+    <div>
 
-    <h3>
-        Order #{{ order.id }}
-    </h3>
+        <h3>
+            order #{{ order.id }}
+        </h3>
 
-    <p>
-        Total:
-        ₹{{ order.total_amount }}
-    </p>
+        <p>
+            Total:
+            ₹{{ order.total_amount }}
+        </p>
 
-    <p>
-        Status:
-        {{ order.status }}
-    </p>
+        <p>
+            Status:
+            {{ order.status }}
+        </p>
 
-    <a href="{% url 'order_detail' order.id %}">
-        View
-    </a>
+        <a href="{% url 'order_detail' order.id %}">
+            View
+        </a>
 
-</div>
+    </div>
 
-<hr>
+    <hr>
 
 {% endfor %}
 
