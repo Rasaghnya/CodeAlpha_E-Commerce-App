@@ -11,4 +11,18 @@ from .models import CustomerProfile
 #     search_fields = ("user__username","phone","city","state","zipcode")
 #     list_filter = ("city","state")
 
-admin.site.register(CustomerProfile)
+@admin.register(CustomerProfile)
+class CustomerProfileAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "id",
+        "user",
+        "phone",
+        "city",
+        "state",
+    )
+
+    search_fields = (
+        "user__username",
+        "phone",
+    )

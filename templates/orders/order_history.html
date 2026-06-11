@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>My Orders</h2>
+
+{% for order in orders %}
+
+    <div>
+
+        <h3>
+            order #{{ order.id }}
+        </h3>
+
+        <p>
+            Total:
+            ₹{{ order.total_amount }}
+        </p>
+
+        <p>
+            Status:
+            {{ order.status }}
+        </p>
+
+        <a href="{% url 'order_detail' order.id %}">
+            View
+        </a>
+
+    </div>
+
+    <hr>
+
+{% endfor %}
+
+{% endblock %}

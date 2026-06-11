@@ -31,39 +31,34 @@ class CartItem(models.Model):
 
 
 class Order(models.Model):
-    """
-    Stores order information
-    """
 
     STATUS_CHOICES = [
-        ("Pending", "Pending"),
-        ("Processing", "Processing"),
-        ("Shipped", "Shipped"),
-        ("Delivered", "Delivered"),
-        ("Cancelled", "Cancelled"),
-    ]
+    ('Pending', 'Pending'),
+    ('Confirmed', 'Confirmed'),
+    ('Packed', 'Packed'),
+    ('Shipped', 'Shipped'),
+    ('Delivered', 'Delivered'),
+    ('Cancelled', 'Cancelled'),
+]
 
-    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="orders")
+    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='orders')
     total_amount = models.DecimalField(max_digits=10,decimal_places=2)
-
-    status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES,
-        default="Pending"
-    )
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    shipping_address = models.TextField()
-    
+    # Shipping Details
+    full_name = models.CharField(max_length=200)
     phone_number = models.CharField(max_length=15)
-
-    payment_method = models.CharField(max_length=50)
-
+    shipping_address = models.TextField()
+    city = models.CharField(max_length=100,default='')
+    state = models.CharField(max_length=100)
+    zipcode = models.CharField(max_length=10)
+    payment_method = models.CharField(max_length=50,default='Cash On Delivery')
     is_paid = models.BooleanField(default=False)
+    status = models.CharField(max_length=20,choices=STATUS_CHOICES,default='Pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Order #{self.id}"
+   
 
 
 class OrderItem(models.Model):
